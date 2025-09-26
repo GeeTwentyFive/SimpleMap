@@ -275,6 +275,37 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="Lights" type="Node" parent="_"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="_/Lights"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+directional_shadow_mode = 0
+sky_mode = 1
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="_/Lights"]
+directional_shadow_mode = 0
+sky_mode = 1
+
+[node name="DirectionalLight3D3" type="DirectionalLight3D" parent="_/Lights"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+directional_shadow_mode = 0
+sky_mode = 1
+
+[node name="DirectionalLight3D4" type="DirectionalLight3D" parent="_/Lights"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0)
+directional_shadow_mode = 0
+sky_mode = 1
+
+[node name="DirectionalLight3D5" type="DirectionalLight3D" parent="_/Lights"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+directional_shadow_mode = 0
+sky_mode = 1
+
+[node name="DirectionalLight3D6" type="DirectionalLight3D" parent="_/Lights"]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+directional_shadow_mode = 0
+sky_mode = 1
+
 [node name="EditorCamera" type="Camera3D" parent="_"]
 unique_name_in_owner = true
 current = true

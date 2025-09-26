@@ -77,6 +77,7 @@ func RegisterMapObject(
 	var sub_viewport_camera := Camera3D.new()
 	sub_viewport_camera.position.z = ADD_POPUP_ICON_CAMERA_OFFSET
 	sub_viewport.add_child(sub_viewport_camera)
+	sub_viewport.add_child(DirectionalLight3D.new())
 	sub_viewport.add_child(registration.object.duplicate())
 	get_child(0).add_child(sub_viewport)
 	await RenderingServer.frame_post_draw
