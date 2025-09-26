@@ -7,6 +7,8 @@ Intended to be used either directly for new games by reading from output JSON,
 or by feeding JSON into custom converter program which would convert
 it to an already existing map file format for an existing game/engine.
 
+![](/screenshots/OpenMap.png?raw=true)
+
 ## Usage:
 `OpenMap <RELATIVE_PATH_TO_MODELS_DIRECTORY>` (only supports GLB)
 
