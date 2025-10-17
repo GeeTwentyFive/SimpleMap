@@ -115,7 +115,7 @@ func InstantiateMapObject(
 			else:
 				instance.set_meta("extra_data", extra_data)
 			instance.position = pos
-			instance.rotation = rot
+			instance.rotation_degrees = rot
 			instance.scale = scale
 			if name != "":
 				instance.name = name
@@ -139,9 +139,9 @@ func SelectMapObject(target: Node3D) -> void:
 	%LineEdit_position_x.text = str(selected_map_object.position.x)
 	%LineEdit_position_y.text = str(selected_map_object.position.y)
 	%LineEdit_position_z.text = str(selected_map_object.position.z)
-	%LineEdit_rotation_x.text = str(rad_to_deg(selected_map_object.rotation.x))
-	%LineEdit_rotation_y.text = str(rad_to_deg(selected_map_object.rotation.y))
-	%LineEdit_rotation_z.text = str(rad_to_deg(selected_map_object.rotation.z))
+	%LineEdit_rotation_x.text = str(selected_map_object.rotation_degrees.x)
+	%LineEdit_rotation_y.text = str(selected_map_object.rotation_degrees.y)
+	%LineEdit_rotation_z.text = str(selected_map_object.rotation_degrees.z)
 	%LineEdit_scale_x.text = str(selected_map_object.scale.x)
 	%LineEdit_scale_y.text = str(selected_map_object.scale.y)
 	%LineEdit_scale_z.text = str(selected_map_object.scale.z)
@@ -181,12 +181,12 @@ func Save(path: String) -> void:
 		map_object_instances_data.append({
 			"name": child.name,
 			"path": child.get_meta("path"),
-			"position_x": child.global_position.x,
-			"position_y": child.global_position.y,
-			"position_z": child.global_position.z,
-			"rotation_x": child.global_rotation.x,
-			"rotation_y": child.global_rotation.y,
-			"rotation_z": child.global_rotation.z,
+			"position_x": child.position.x,
+			"position_y": child.position.y,
+			"position_z": child.position.z,
+			"rotation_x": child.rotation_degrees.x,
+			"rotation_y": child.rotation_degrees.y,
+			"rotation_z": child.rotation_degrees.z,
 			"scale_x": child.scale.x,
 			"scale_y": child.scale.y,
 			"scale_z": child.scale.z,
@@ -335,7 +335,7 @@ func _on_line_edit_position_z_text_submitted(new_text: String) -> void:
 func _on_line_edit_rotation_x_text_submitted(new_text: String) -> void:
 	get_viewport().gui_release_focus()
 	if selected_map_object:
-		selected_map_object.rotation.x = deg_to_rad(float(new_text))
+		selected_map_object.rotation_degrees.x = float(new_text)
 		SelectMapObject(selected_map_object) # Refresh
 	else:
 		%LineEdit_rotation_x.text = ""
@@ -343,7 +343,7 @@ func _on_line_edit_rotation_x_text_submitted(new_text: String) -> void:
 func _on_line_edit_rotation_y_text_submitted(new_text: String) -> void:
 	get_viewport().gui_release_focus()
 	if selected_map_object:
-		selected_map_object.rotation.y = deg_to_rad(float(new_text))
+		selected_map_object.rotation_degrees.y = float(new_text)
 		SelectMapObject(selected_map_object) # Refresh
 	else:
 		%LineEdit_rotation_y.text = ""
@@ -351,7 +351,7 @@ func _on_line_edit_rotation_y_text_submitted(new_text: String) -> void:
 func _on_line_edit_rotation_z_text_submitted(new_text: String) -> void:
 	get_viewport().gui_release_focus()
 	if selected_map_object:
-		selected_map_object.rotation.z = deg_to_rad(float(new_text))
+		selected_map_object.rotation_degrees.z = float(new_text)
 		SelectMapObject(selected_map_object) # Refresh
 	else:
 		%LineEdit_rotation_z.text = ""
