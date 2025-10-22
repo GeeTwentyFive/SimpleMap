@@ -35,19 +35,16 @@ func LoadDefaultExtraData(path: String) -> String:
 		return ""
 	return file.get_as_text()
 
-func GetColliderForMeshes(target: Node3D) -> CollisionShape3D:
-	var aabb: AABB
+func GetCollidersForMeshes(target: Node3D) -> Array[CollisionShape3D]:
+	var colliders: Array[CollisionShape3D]
 	for child in target.find_children("", "MeshInstance3D", true, false):
-		if not aabb:
-			aabb = child.mesh.get_aabb()
+		if not child.mesh:
 			continue
-		aabb = aabb.merge(child.mesh.get_aabb())
-	
-	var collider := CollisionShape3D.new()
-	collider.shape = BoxShape3D.new()
-	collider.shape.size = aabb.size
-	
-	return collider
+		var collider := CollisionShape3D.new()
+		collider.shape = child.mesh.create_convex_shape()
+		collider.transform = child.transform
+		colliders.append(collider)
+	return colliders
 
 func RegisterMapObject(
 	path: String,
@@ -62,7 +59,8 @@ func RegisterMapObject(
 	registration.path = path
 	registration.object = Area3D.new()
 	registration.object.add_child(LoadSceneFromPath(path))
-	registration.object.add_child(GetColliderForMeshes(registration.object))
+	for collider in GetCollidersForMeshes(registration.object):
+		registration.object.add_child(collider)
 	if default_extra_data != "":
 		registration.default_extra_data = default_extra_data
 	else:
@@ -125,11 +123,6 @@ func InstantiateMapObject(
 func SelectMapObject(target: Node3D) -> void:
 	selected_map_object = target
 	
-	var target_collider := selected_map_object.get_child(-1)
-	%SelectBoxOutline.mesh.size = target_collider.shape.size
-	%SelectBoxOutline.global_transform = target_collider.global_transform
-	%SelectBoxOutline.show()
-	
 	if not %Gizmo3D.is_selected(selected_map_object):
 		%Gizmo3D.clear_selection()
 		%Gizmo3D.select(selected_map_object)
@@ -149,8 +142,6 @@ func SelectMapObject(target: Node3D) -> void:
 
 func DeselectMapObject() -> void:
 	selected_map_object = null
-	
-	%SelectBoxOutline.hide()
 	
 	%Gizmo3D.clear_selection()
 	%Gizmo3D.hide()

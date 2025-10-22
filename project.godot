@@ -28,7 +28,7 @@ window/vsync/vsync_mode=0
 
 [editor]
 
-run/main_run_args="_TEST"
+run/main_run_args="_TEMP"
 
 [editor_plugins]
 

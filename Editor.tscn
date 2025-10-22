@@ -1,17 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://de4d16iyix488"]
+[gd_scene load_steps=4 format=3 uid="uid://de4d16iyix488"]
 
 [ext_resource type="Script" uid="uid://xdsrg4lhooyu" path="res://editor.gd" id="1_1qsck"]
 [ext_resource type="Script" uid="uid://blsl63avkcrta" path="res://camera_controller.gd" id="2_agv3s"]
 [ext_resource type="Script" uid="uid://e3f1ox6y6cvg" path="res://addons/Gizmo3DScript/gizmo3D.gd" id="3_agv3s"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1qsck"]
-transparency = 1
-albedo_color = Color(0.25098, 0.25098, 0.25098, 0.25098)
-metallic_specular = 0.0
-roughness = 0.0
-
-[sub_resource type="BoxMesh" id="BoxMesh_agv3s"]
-material = SubResource("StandardMaterial3D_1qsck")
 
 [node name="Editor" type="Node3D"]
 script = ExtResource("1_1qsck")
@@ -313,11 +304,6 @@ fov = 90.0
 near = 0.1
 far = 10000.0
 script = ExtResource("2_agv3s")
-
-[node name="SelectBoxOutline" type="MeshInstance3D" parent="_"]
-unique_name_in_owner = true
-visible = false
-mesh = SubResource("BoxMesh_agv3s")
 
 [node name="Gizmo3D" type="Node3D" parent="_"]
 unique_name_in_owner = true
