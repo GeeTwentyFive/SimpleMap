@@ -21,10 +21,12 @@ While holding down Right Mouse Button:
 - Space = Up
 - CTRL = Down
 
-Esc = unfocus GUI
-
-Scroll = change camera move speed
-
 Click = select/deselect map object
 
 Del = delete selected map object
+
+Scroll = change camera move speed
+
+0 = reset camera position to 0, 0, 0
+
+Esc = unfocus GUI
