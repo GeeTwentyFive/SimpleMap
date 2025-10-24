@@ -3,7 +3,6 @@ extends Node3D
 
 const EXTRA_DATA_FILE_EXTENSION = ".extradata"
 const ADD_POPUP_ICON_RESOLUTION = Vector2i(64, 64)
-const ADD_POPUP_ICON_CAMERA_OFFSET = 4
 
 
 # "DS" is short for "Data Structure"
