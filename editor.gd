@@ -46,6 +46,16 @@ func GetCollidersForMeshes(target: Node3D) -> Array[CollisionShape3D]:
 		colliders.append(collider)
 	return colliders
 
+func GetLongestAxisSize(target: Node3D) -> float:
+	var longest_axis_size := 0.0
+	for child in target.find_children("", "MeshInstance3D", true, false):
+		if not child.mesh:
+			continue
+		var longest_child_axis_size: float = child.mesh.get_aabb().get_longest_axis_size()
+		if longest_child_axis_size > longest_axis_size:
+			longest_axis_size = longest_child_axis_size
+	return longest_axis_size
+
 func RegisterMapObject(
 	path: String,
 	default_extra_data: String = ""
@@ -73,7 +83,10 @@ func RegisterMapObject(
 	sub_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	sub_viewport.world_3d = World3D.new()
 	var sub_viewport_camera := Camera3D.new()
-	sub_viewport_camera.position.z = ADD_POPUP_ICON_CAMERA_OFFSET
+	sub_viewport_camera.position.z = abs(
+		GetLongestAxisSize(registration.object)
+		/ sin(deg_to_rad(sub_viewport_camera.fov)/2)
+	)
 	sub_viewport.add_child(sub_viewport_camera)
 	sub_viewport.add_child(DirectionalLight3D.new())
 	sub_viewport.add_child(registration.object.duplicate())
@@ -255,7 +268,7 @@ func _input(event: InputEvent) -> void:
 			KEY_ESCAPE: get_viewport().gui_release_focus()
 			KEY_DELETE: DeleteSelectedMapObject()
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if get_viewport().gui_get_focus_owner() != null: return
 	if %Gizmo3D.hovering or %Gizmo3D.editing: return
 	

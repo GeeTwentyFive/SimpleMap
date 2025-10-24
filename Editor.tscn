@@ -212,6 +212,7 @@ theme_override_font_sizes/font_size = 12
 [node name="Viewport_padding" type="Control" parent="_/GUI/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 
 [node name="SaveFileDialog" type="FileDialog" parent="_/GUI"]
 unique_name_in_owner = true
