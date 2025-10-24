@@ -87,12 +87,11 @@ func RegisterMapObject(
 	MapObject_button.tooltip_text = registration.path
 	MapObject_button.pressed.connect(
 		func():
-			InstantiateMapObject(
+			SelectMapObject(InstantiateMapObject(
 				registration.path,
 				%EditorCamera.position
-			)
+			))
 			%AddMapObjectPopup.hide()
-			get_viewport().gui_release_focus()
 	)
 	%AddMapObjectButtonsGrid.add_child(MapObject_button)
 
@@ -103,7 +102,7 @@ func InstantiateMapObject(
 	scale: Vector3 = Vector3.ONE,
 	extra_data: String = "",
 	name: String = ""
-) -> void:
+) -> Node3D:
 	for registration in registered_map_objects:
 		if registration.path == path:
 			var instance = registration.object.duplicate()
@@ -118,7 +117,8 @@ func InstantiateMapObject(
 			if name != "":
 				instance.name = name
 			add_child(instance)
-			break
+			return instance
+	return null
 
 func SelectMapObject(target: Node3D) -> void:
 	selected_map_object = target
