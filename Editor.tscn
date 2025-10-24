@@ -209,10 +209,9 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 12
 
-[node name="Padding" type="Control" parent="_/GUI/HSplitContainer"]
+[node name="Viewport_padding" type="Control" parent="_/GUI/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
 
 [node name="SaveFileDialog" type="FileDialog" parent="_/GUI"]
 unique_name_in_owner = true
@@ -326,6 +325,7 @@ metadata/_custom_type_script = "uid://e3f1ox6y6cvg"
 [connection signal="text_submitted" from="_/GUI/HSplitContainer/PanelContainer/VBoxContainer/ScrollContainer/Inspector/HBoxContainer8/LineEdit_scale_y" to="." method="_on_line_edit_scale_y_text_submitted"]
 [connection signal="text_submitted" from="_/GUI/HSplitContainer/PanelContainer/VBoxContainer/ScrollContainer/Inspector/HBoxContainer9/LineEdit_scale_z" to="." method="_on_line_edit_scale_z_text_submitted"]
 [connection signal="text_changed" from="_/GUI/HSplitContainer/PanelContainer/VBoxContainer/ScrollContainer/Inspector/CodeEdit_extra_data" to="." method="_on_code_edit_extra_data_text_changed"]
+[connection signal="mouse_entered" from="_/GUI/HSplitContainer/Viewport_padding" to="." method="_on_viewport_padding_mouse_entered"]
 [connection signal="file_selected" from="_/GUI/SaveFileDialog" to="." method="_on_save_file_dialog_file_selected"]
 [connection signal="file_selected" from="_/GUI/LoadFileDialog" to="." method="_on_load_file_dialog_file_selected"]
 [connection signal="text_changed" from="_/GUI/AddMapObjectPopup/VBoxContainer/LineEdit_add_search" to="." method="_on_line_edit_add_search_text_changed"]

@@ -405,3 +405,7 @@ func _on_line_edit_add_search_text_changed(new_text: String) -> void:
 	for button in buttons_sorted:
 		%AddMapObjectButtonsGrid.remove_child(button)
 		%AddMapObjectButtonsGrid.add_child(button)
+
+
+func _on_viewport_padding_mouse_entered() -> void:
+	get_viewport().gui_release_focus()
