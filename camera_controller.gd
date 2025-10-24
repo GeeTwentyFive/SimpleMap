@@ -44,3 +44,4 @@ func _physics_process(delta: float) -> void:
 	if Input.is_key_pressed(KEY_D): translate_object_local(Vector3.RIGHT * move_speed * delta)
 	if Input.is_key_pressed(KEY_SPACE): translate_object_local(Vector3.UP * move_speed * delta)
 	if Input.is_key_pressed(KEY_CTRL): translate_object_local(Vector3.DOWN * move_speed * delta)
+	if Input.is_key_pressed(KEY_0): global_position = Vector3.ZERO
