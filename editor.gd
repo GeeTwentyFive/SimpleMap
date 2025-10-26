@@ -267,7 +267,7 @@ func _input(event: InputEvent) -> void:
 			KEY_ESCAPE: get_viewport().gui_release_focus()
 			KEY_DELETE: DeleteSelectedMapObject()
 			KEY_D:
-				if Input.is_key_pressed(KEY_CTRL) and selected_map_object:
+				if Input.is_key_pressed(KEY_ALT) and selected_map_object:
 					SelectMapObject(InstantiateMapObject(
 						selected_map_object.get_meta("path"),
 						selected_map_object.position,
