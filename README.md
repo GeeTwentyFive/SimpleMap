@@ -23,7 +23,7 @@ While holding down Right Mouse Button:
 
 Click = select/deselect map object
 
-CTRL+D = duplicate selected map object
+Alt+D = duplicate selected map object
 
 Del = delete selected map object
 
