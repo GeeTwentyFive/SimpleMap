@@ -16,36 +16,6 @@ var registered_map_objects: Array[DS_MapObjectRegistration] = []
 var selected_map_object: Node3D
 
 
-func CreateMeshInstanceFromS3DFile(path: String) -> MeshInstance3D:
-	var mesh_instance := MeshInstance3D.new()
-	mesh_instance.mesh = S3DLoader.load(path)
-	return mesh_instance
-
-func LoadDefaultExtraData(path: String) -> String:
-	var file := FileAccess.open(
-		path.get_basename() + EXTRA_DATA_FILE_EXTENSION,
-		FileAccess.READ
-	)
-	if file == null:
-		return ""
-	return file.get_as_text()
-
-func CreateCollisionShapeForMeshInstance(target: MeshInstance3D) -> CollisionShape3D:
-	var collider := CollisionShape3D.new()
-	collider.shape = target.mesh.create_convex_shape()
-	collider.transform = target.transform
-	return collider
-
-func GetLongestAxisSize(target: Node3D) -> float:
-	var longest_axis_size := 0.0
-	for child in target.find_children("", "MeshInstance3D", true, false):
-		if not child.mesh:
-			continue
-		var longest_child_axis_size: float = child.mesh.get_aabb().get_longest_axis_size()
-		if longest_child_axis_size > longest_axis_size:
-			longest_axis_size = longest_child_axis_size
-	return longest_axis_size
-
 func RegisterMapObject(
 	path: String,
 	default_extra_data: String = ""
@@ -56,15 +26,24 @@ func RegisterMapObject(
 			return
 	
 	var registration := DS_MapObjectRegistration.new()
-	registration.path = path.get_basename()
+	registration.path = path
 	registration.object = Area3D.new()
-	var mesh_instance := CreateMeshInstanceFromS3DFile(path)
+	var mesh_instance := MeshInstance3D.new()
+	mesh_instance.mesh = S3DLoader.load(path)
 	registration.object.add_child(mesh_instance)
-	registration.object.add_child(CreateCollisionShapeForMeshInstance(mesh_instance))
+	var collider := CollisionShape3D.new()
+	collider.shape = mesh_instance.mesh.create_convex_shape()
+	collider.transform = mesh_instance.transform
+	registration.object.add_child(collider)
 	if default_extra_data != "":
 		registration.default_extra_data = default_extra_data
 	else:
-		registration.default_extra_data = LoadDefaultExtraData(path)
+		var extra_data_file := FileAccess.open(
+			path.get_basename() + EXTRA_DATA_FILE_EXTENSION,
+			FileAccess.READ
+		)
+		if extra_data_file == null: registration.default_extra_data = ""
+		else: registration.default_extra_data = extra_data_file.get_as_text()
 	registered_map_objects.append(registration)
 	
 	var sub_viewport := SubViewport.new()
@@ -74,7 +53,7 @@ func RegisterMapObject(
 	sub_viewport.world_3d = World3D.new()
 	var sub_viewport_camera := Camera3D.new()
 	sub_viewport_camera.position.z = abs(
-		GetLongestAxisSize(registration.object)
+		mesh_instance.mesh.get_aabb().get_longest_axis_size()
 		/ sin(deg_to_rad(sub_viewport_camera.fov)/2)
 	)
 	sub_viewport.add_child(sub_viewport_camera)
@@ -98,6 +77,7 @@ func RegisterMapObject(
 	)
 	%AddMapObjectButtonsGrid.add_child(MapObject_button)
 
+@warning_ignore("shadowed_variable_base_class")
 func InstantiateMapObject(
 	path: String,
 	pos: Vector3 = Vector3.ZERO,
@@ -160,12 +140,6 @@ func DeselectMapObject() -> void:
 	%LineEdit_scale_y.text = ""
 	%LineEdit_scale_z.text = ""
 	%CodeEdit_extra_data.text = ""
-
-func DeleteSelectedMapObject() -> void:
-	if selected_map_object:
-		var target := selected_map_object
-		DeselectMapObject()
-		target.queue_free()
 
 func Save(path: String) -> void:
 	var map_object_instances_data: Array[Dictionary]
@@ -237,26 +211,28 @@ func get_all_files(path: String, file_ext := "", files := []):
 	
 	return files
 
-func RegisterMapObjectsFromDir(path: String) -> void:
-	var files: Array = get_all_files(path, "s3d")
-	for file in files:
-		for i in range(len(file)): # Convert absolute path to relative path (imperfect)
-			if file.substr(i, len(path)) == path:
-				RegisterMapObject(file.substr(i))
-
 func _ready() -> void:
 	if (OS.get_cmdline_args().is_empty()):
 		print("\n\tUSAGE: OpenMap <RELATIVE_PATH_TO_MODELS_DIR>\n")
 		get_tree().quit()
 		return
 	
-	RegisterMapObjectsFromDir(OS.get_cmdline_args()[0])
+	var target_path := OS.get_cmdline_args()[0]
+	var files: Array = get_all_files(target_path, "s3d")
+	for file in files:
+		for i in range(len(file)): # Convert absolute path to relative path (imperfect)
+			if file.substr(i, len(target_path)) == target_path:
+				RegisterMapObject(file.substr(i).get_basename())
 
 func _input(event: InputEvent) -> void:
 	if (event is InputEventKey and event.pressed and not event.is_echo()):
 		match event.keycode:
 			KEY_ESCAPE: get_viewport().gui_release_focus()
-			KEY_DELETE: DeleteSelectedMapObject()
+			KEY_DELETE:
+				if selected_map_object:
+					var target := selected_map_object
+					DeselectMapObject()
+					target.queue_free()
 			KEY_D:
 				if Input.is_key_pressed(KEY_ALT) and selected_map_object:
 					SelectMapObject(InstantiateMapObject(
@@ -283,6 +259,8 @@ func _physics_process(_delta: float) -> void:
 		else:
 			DeselectMapObject()
 
+
+#region SIGNALS
 
 func _on_button_add_pressed() -> void:
 	%AddMapObjectPopup.popup_centered()
@@ -404,7 +382,7 @@ func _on_gizmo_3d_transform_changed(mode: Gizmo3D.TransformMode, value: Vector3)
 
 func _on_line_edit_add_search_text_changed(new_text: String) -> void:
 	var buttons_sorted := %AddMapObjectButtonsGrid.get_children()
-	buttons_sorted.sort_custom(
+	buttons_sorted.sort_custom( # TODO: Change to contains check
 		func(a, b):
 			if (
 				a.tooltip_text.similarity(new_text) >
@@ -421,3 +399,5 @@ func _on_line_edit_add_search_text_changed(new_text: String) -> void:
 
 func _on_viewport_padding_mouse_entered() -> void:
 	get_viewport().gui_release_focus()
+
+#endregion
