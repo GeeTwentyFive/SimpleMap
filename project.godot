@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="OpenMap"
+config/name="SimpleMap"
 run/main_scene="uid://de4d16iyix488"
 run/print_header=false
 config/features=PackedStringArray("4.5", "GL Compatibility")
@@ -28,7 +28,7 @@ window/vsync/vsync_mode=0
 
 [editor]
 
-run/main_run_args="_TEMP"
+run/main_run_args="_TEST"
 
 [editor_plugins]
 

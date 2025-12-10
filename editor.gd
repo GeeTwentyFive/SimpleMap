@@ -21,15 +21,16 @@ func RegisterMapObject(
 	default_extra_data: String = ""
 ) -> void:
 	for existing in registered_map_objects:
-		if existing.path == path:
-			printerr("ERROR: MapObject \"" + path + "\" already registered!")
+		if existing.path == path.get_basename():
+			printerr("ERROR: MapObject \"" + path.get_basename() + "\" already registered!")
 			return
 	
 	var registration := DS_MapObjectRegistration.new()
-	registration.path = path
+	registration.path = path.get_basename()
 	registration.object = Area3D.new()
 	var mesh_instance := MeshInstance3D.new()
 	mesh_instance.mesh = S3DLoader.load(path)
+	if (mesh_instance.mesh == null): return
 	registration.object.add_child(mesh_instance)
 	var collider := CollisionShape3D.new()
 	collider.shape = mesh_instance.mesh.create_convex_shape()
@@ -222,7 +223,7 @@ func _ready() -> void:
 	for file in files:
 		for i in range(len(file)): # Convert absolute path to relative path (imperfect)
 			if file.substr(i, len(target_path)) == target_path:
-				RegisterMapObject(file.substr(i).get_basename())
+				RegisterMapObject(file.substr(i))
 
 func _input(event: InputEvent) -> void:
 	if (event is InputEventKey and event.pressed and not event.is_echo()):
@@ -382,7 +383,7 @@ func _on_gizmo_3d_transform_changed(mode: Gizmo3D.TransformMode, value: Vector3)
 
 func _on_line_edit_add_search_text_changed(new_text: String) -> void:
 	var buttons_sorted := %AddMapObjectButtonsGrid.get_children()
-	buttons_sorted.sort_custom( # TODO: Change to contains check
+	buttons_sorted.sort_custom(
 		func(a, b):
 			if (
 				a.tooltip_text.similarity(new_text) >
