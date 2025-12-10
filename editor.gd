@@ -238,7 +238,7 @@ func get_all_files(path: String, file_ext := "", files := []):
 	return files
 
 func RegisterMapObjectsFromDir(path: String) -> void:
-	var files: Array = get_all_files(path, "glb")
+	var files: Array = get_all_files(path, "s3d")
 	for file in files:
 		for i in range(len(file)): # Convert absolute path to relative path (imperfect)
 			if file.substr(i, len(path)) == path:
