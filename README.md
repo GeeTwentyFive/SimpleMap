@@ -1,6 +1,6 @@
 General-purpose cross-platform 3D map editor
 
-Import GLB 3D models, optionally with default extra data via ".extradata" file
+Import [S3D](https://github.com/GeeTwentyFive/Simple3DFileFormat) 3D models, optionally with default extra data via ".extradata" file
 with same base name and base directory, transform them in 3D space, save as JSON.
 
 Intended to be used either directly for new games by reading from output JSON,
@@ -10,7 +10,7 @@ it to an already existing map file format for an existing game/engine.
 ![](/screenshots/OpenMap.png?raw=true)
 
 ## Usage:
-`OpenMap <RELATIVE_PATH_TO_MODELS_DIRECTORY>` (only supports GLB)
+`OpenMap <RELATIVE_PATH_TO_MODELS_DIRECTORY>` (only supports [S3D](https://github.com/GeeTwentyFive/Simple3DFileFormat))
 
 ## Controls:
 While holding down Right Mouse Button:
