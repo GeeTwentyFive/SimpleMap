@@ -59,6 +59,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="Label_Name" type="Label" parent="_/GUI/HSplitContainer/PanelContainer/VBoxContainer/ScrollContainer/Inspector"]
+layout_mode = 2
+text = "Name:"
+
+[node name="LineEdit_name" type="LineEdit" parent="_/GUI/HSplitContainer/PanelContainer/VBoxContainer/ScrollContainer/Inspector"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+
 [node name="Label_Position" type="Label" parent="_/GUI/HSplitContainer/PanelContainer/VBoxContainer/ScrollContainer/Inspector"]
 layout_mode = 2
 size_flags_vertical = 1
@@ -306,6 +315,7 @@ metadata/_custom_type_script = "uid://e3f1ox6y6cvg"
 [connection signal="pressed" from="_/GUI/HSplitContainer/PanelContainer/VBoxContainer/Button_Add" to="." method="_on_button_add_pressed"]
 [connection signal="pressed" from="_/GUI/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer/Button_Save" to="." method="_on_button_save_pressed"]
 [connection signal="pressed" from="_/GUI/HSplitContainer/PanelContainer/VBoxContainer/HBoxContainer/Button_Load" to="." method="_on_button_load_pressed"]
+[connection signal="text_submitted" from="_/GUI/HSplitContainer/PanelContainer/VBoxContainer/ScrollContainer/Inspector/LineEdit_name" to="." method="_on_line_edit_name_text_submitted"]
 [connection signal="text_submitted" from="_/GUI/HSplitContainer/PanelContainer/VBoxContainer/ScrollContainer/Inspector/HBoxContainer/LineEdit_position_x" to="." method="_on_line_edit_position_x_text_submitted"]
 [connection signal="text_submitted" from="_/GUI/HSplitContainer/PanelContainer/VBoxContainer/ScrollContainer/Inspector/HBoxContainer2/LineEdit_position_y" to="." method="_on_line_edit_position_y_text_submitted"]
 [connection signal="text_submitted" from="_/GUI/HSplitContainer/PanelContainer/VBoxContainer/ScrollContainer/Inspector/HBoxContainer3/LineEdit_position_z" to="." method="_on_line_edit_position_z_text_submitted"]
