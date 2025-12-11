@@ -16,10 +16,14 @@ var registered_map_objects: Array[DS_MapObjectRegistration] = []
 var selected_map_object: Node3D
 
 
-func CreateMeshInstanceFromS3DFile(path: String) -> MeshInstance3D:
-	var mesh_instance := MeshInstance3D.new()
-	mesh_instance.mesh = S3DLoader.load(path)
-	return mesh_instance
+func LoadSceneFromPath(path: String) -> Node3D:
+	var gltf_document_load = GLTFDocument.new()
+	var gltf_state_load = GLTFState.new()
+	var error = gltf_document_load.append_from_file(path, gltf_state_load)
+	if error != OK:
+		printerr("ERROR: Failed to load scene at path: \"" + path + "\"")
+		return Node3D.new()
+	return gltf_document_load.generate_scene(gltf_state_load)
 
 func LoadDefaultExtraData(path: String) -> String:
 	var file := FileAccess.open(
@@ -30,11 +34,16 @@ func LoadDefaultExtraData(path: String) -> String:
 		return ""
 	return file.get_as_text()
 
-func CreateCollisionShapeForMeshInstance(target: MeshInstance3D) -> CollisionShape3D:
-	var collider := CollisionShape3D.new()
-	collider.shape = target.mesh.create_convex_shape()
-	collider.transform = target.transform
-	return collider
+func GetCollidersForMeshes(target: Node3D) -> Array[CollisionShape3D]:
+	var colliders: Array[CollisionShape3D]
+	for child in target.find_children("", "MeshInstance3D", true, false):
+		if not child.mesh:
+			continue
+		var collider := CollisionShape3D.new()
+		collider.shape = child.mesh.create_convex_shape()
+		collider.transform = child.transform
+		colliders.append(collider)
+	return colliders
 
 func GetLongestAxisSize(target: Node3D) -> float:
 	var longest_axis_size := 0.0
@@ -56,11 +65,11 @@ func RegisterMapObject(
 			return
 	
 	var registration := DS_MapObjectRegistration.new()
-	registration.path = path.get_basename()
+	registration.path = path
 	registration.object = Area3D.new()
-	var mesh_instance := CreateMeshInstanceFromS3DFile(path)
-	registration.object.add_child(mesh_instance)
-	registration.object.add_child(CreateCollisionShapeForMeshInstance(mesh_instance))
+	registration.object.add_child(LoadSceneFromPath(path))
+	for collider in GetCollidersForMeshes(registration.object):
+		registration.object.add_child(collider)
 	if default_extra_data != "":
 		registration.default_extra_data = default_extra_data
 	else:
