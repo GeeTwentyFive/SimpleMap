@@ -84,8 +84,7 @@ func InstantiateMapObject(
 	pos: Vector3 = Vector3.ZERO,
 	rot: Vector3 = Vector3.ZERO,
 	scale: Vector3 = Vector3.ONE,
-	extra_data: String = "",
-	name: String = ""
+	extra_data: String = ""
 ) -> Node3D:
 	for registration in registered_map_objects:
 		if registration.path == path:
@@ -98,8 +97,6 @@ func InstantiateMapObject(
 			instance.position = pos
 			instance.rotation_degrees = rot
 			instance.scale = scale
-			if name != "":
-				instance.name = name
 			add_child(instance)
 			return instance
 	return null
@@ -112,7 +109,6 @@ func SelectMapObject(target: Node3D) -> void:
 		%Gizmo3D.select(selected_map_object)
 	%Gizmo3D.show()
 	
-	%LineEdit_name.text = selected_map_object.name
 	%LineEdit_position_x.text = str(selected_map_object.position.x)
 	%LineEdit_position_y.text = str(selected_map_object.position.y)
 	%LineEdit_position_z.text = str(selected_map_object.position.z)
@@ -130,7 +126,6 @@ func DeselectMapObject() -> void:
 	%Gizmo3D.clear_selection()
 	%Gizmo3D.hide()
 	
-	%LineEdit_name.text = ""
 	%LineEdit_position_x.text = ""
 	%LineEdit_position_y.text = ""
 	%LineEdit_position_z.text = ""
@@ -148,7 +143,6 @@ func Save(path: String) -> void:
 	children.pop_front() # Exclude internal nodes
 	for child in children:
 		map_object_instances_data.append({
-			"name": child.name,
 			"path": child.get_meta("path"),
 			"position_x": child.position.x,
 			"position_y": child.position.y,
@@ -183,8 +177,7 @@ func Load(path: String) -> void:
 			Vector3(instance["position_x"], instance["position_y"], instance["position_z"]),
 			Vector3(instance["rotation_x"], instance["rotation_y"], instance["rotation_z"]),
 			Vector3(instance["scale_x"], instance["scale_y"], instance["scale_z"]),
-			instance["extra_data"],
-			instance["name"]
+			instance["extra_data"]
 		)
 
 # https://gist.github.com/hiulit/772b8784436898fd7f942750ad99e33e?permalink_comment_id=5034395#gistcomment-5034395
@@ -283,13 +276,6 @@ func _on_load_file_dialog_file_selected(path: String) -> void:
 	get_viewport().gui_release_focus()
 
 
-func _on_line_edit_name_text_submitted(new_text: String) -> void:
-	get_viewport().gui_release_focus()
-	if selected_map_object:
-		selected_map_object.name = new_text
-	else:
-		%LineEdit_name.text = ""
-
 func _on_line_edit_position_x_text_submitted(new_text: String) -> void:
 	get_viewport().gui_release_focus()
 	if selected_map_object:
@@ -379,7 +365,12 @@ func _on_gizmo_3d_transform_changed(mode: Gizmo3D.TransformMode, value: Vector3)
 		Gizmo3D.TransformMode.SCALE:
 			selected_map_object.scale += value
 	SelectMapObject(selected_map_object) # Refresh
-
+func _on_line_edit_name_text_submitted(new_text: String) -> void:
+	get_viewport().gui_release_focus()
+	if selected_map_object:
+		selected_map_object.name = new_text
+	else:
+		%LineEdit_name.text = ""
 
 func _on_line_edit_add_search_text_changed(new_text: String) -> void:
 	var buttons_sorted := %AddMapObjectButtonsGrid.get_children()
